@@ -3,22 +3,26 @@ from rembg import remove
 from PIL import Image
 import io
 
-st.title("AIVED PRO - BG Remover")
+st.set_page_config(page_title="AIVED PRO", layout="centered")
 
-uploaded_file = st.file_uploader("Upload Image", type=["jpg", "png", "jpeg"])
+st.title("✂️ AIVED PRO")
+st.write("Professional Background Remover")
 
-if uploaded_file:
-    img = Image.open(uploaded_file)
-    st.image(img, caption='Selected Image')
+file = st.file_uploader("Upload Image", type=["jpg", "png", "jpeg"])
+
+if file is not None:
+    img = Image.open(file)
+    st.image(img, caption="Original Image")
     
-    if st.button('Remove Background'):
-        with st.spinner('AI is working...'):
-            output = remove(uploaded_file.getvalue())
-            res_img = Image.open(io.BytesIO(output))
-            st.image(res_img, caption='Final Result')
+    if st.button("REMOVE BACKGROUND"):
+        with st.spinner("AI is processing..."):
+            input_data = file.getvalue()
+            output_data = remove(input_data)
+            final_img = Image.open(io.BytesIO(output_data))
+            
+            st.image(final_img, caption="Background Removed")
             
             buf = io.BytesIO()
-            res_img.save(buf, format="PNG")
-            st.download_button("Download PNG", data=buf.getvalue(), file_name="aived.png")
+            final_img.save(buf, format="PNG")
+            st.download_button("📥 Download Result", data=buf.getvalue(), file_name="aived_result.png")
             
-                  )
